@@ -136,7 +136,9 @@ O Glue Job:
 Execute consultas SQL, por exemplo:
 
 SELECT * 
+
 FROM dados_b3_2
+
 WHERE date = '2025-08-05';
 
 👨‍💻 Autor
