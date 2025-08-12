@@ -37,18 +37,32 @@
 📂 Estrutura do Projeto
 
 📦 projeto-b3-aws
+
  ┣ 📂 lambda
+
  ┃ ┗ lambda_function.py   # Código da função Lambda
+
  ┣ 📂 glue
+
  ┃ ┗ glue.py   # Código do script do glue
+
  ┃  ┗ glue.json   # Código do script do glue
+
  ┣ 📂 gráfico
+
  ┃ ┗ grafico.py  # Script visualização dos dados
+
  ┣ 📂 scrap_b3
+
  ┃ ┗ 📜 scrap.py  # Script de coleta e upload para o S3
+
  ┣ 📜 README.md
+
  ┣ 📜 requirements.txt # arquivo com todas as bibliotecas para instalar.
+
  ┣ 📜 .gitignore
+
+ ┣ 📜 arquitetura.pdf
  
 ⚙️ Tecnologias Utilizadas
 '''
