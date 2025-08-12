@@ -1,8 +1,8 @@
-📌 Visão Geral
-# Este projeto implementa um pipeline de ingestão e transformação de dados da B3 utilizando os serviços da AWS.
-# O objetivo é coleta de dados, armazenamento, processamento, catalogação e consulta no Athena.
+# 📌 Visão Geral
+- Este projeto implementa um pipeline de ingestão e transformação de dados da B3 utilizando os serviços da AWS.
+- O objetivo é coleta de dados, armazenamento, processamento, catalogação e consulta no Athena.
 
-🛠 Arquitetura
+# 🛠 Arquitetura
 - Scraping da B3 → Captura os dados de ações e salva no Amazon S3 em formato Parquet, particionado por data.**(local no vs code)**
 
 - Lambda → Dispara automaticamente quando um novo arquivo é adicionado ao bucket e inicia o AWS Glue Job.**(O script foi feito direto no AWS no lambda)**
@@ -34,7 +34,7 @@
    python lambda/scrap.py
    ```
 
-📂 Estrutura do Projeto
+# 📂 Estrutura do Projeto
 
 📦 projeto-b3-aws
 
@@ -64,7 +64,7 @@
 
  ┣ 📜 arquitetura.pdf
  
-⚙️ Tecnologias Utilizadas
+# ⚙️ Tecnologias Utilizadas
 '''
 - [boto3](https://pypi.org/project/boto3/)
 - [Pandas](https://pandas.pydata.org/)
@@ -78,7 +78,7 @@
 - [matplotlib](https://pypi.org/project/matplotlib/)
 - [seaborn](https://pypi.org/project/seaborn/)
 
-⚙️ Serviços AWS Utilizados
+# ⚙️ Serviços AWS Utilizados
 - Amazon S3 → Armazenamento dos dados brutos e refinados.
 
 - AWS Lambda → Função que aciona o Glue Job automaticamente.
@@ -89,21 +89,21 @@
 
 - Amazon Athena → Consulta SQL sobre os dados no S3.
 
-🔐 Permissões IAM
-# Foram criadas 2 regras no IAM:
+# 🔐 Permissões IAM
+- Foram criadas 2 regras no IAM:
 
-# Regra do Lambda com a política:
+1. Regra do Lambda com a política:
 
 - AWSLambdaBasicExecutionRole
 
-# Regra do Glue com as políticas:
+2. Regra do Glue com as políticas:
 
 - AmazonS3FullAccess
 
 - AWSGlueServiceRole
 
-📜 Lambda Function
-# O código da função Lambda não está neste README, mas está localizado na pasta lambda/.
+# 📜 Lambda Function
+- O código da função Lambda não está neste README, mas está localizado na pasta lambda/.
 
 # Função principal da Lambda:
 
@@ -111,14 +111,14 @@
 
 - Inicia o Glue Job responsável por processar os dados.
 
-🔄 Fluxo do Pipeline
+# 🔄 Fluxo do Pipeline
 - O script scrap.py coleta os dados da B3 e envia para o bucket S3 na pasta scrap/date=YYYY-MM-DD/.
 
 - O S3 Event Trigger detecta o upload e aciona a Lambda.
 
 - A Lambda chama o Glue Job.
 
-O Glue Job:
+# O Glue Job:
 
 - Agrupa, renomeia e realiza cálculo com datas.
 
@@ -128,7 +128,7 @@ O Glue Job:
 
 - O Athena lê os dados e permite consultas SQL.
 
-📊 Consultando no Athena
+# 📊 Consultando no Athena
 - Abra o Amazon Athena.
 
 - No banco de dados configurado pelo Glue Crawler, selecione a tabela de dados refinados.
@@ -141,6 +141,6 @@ FROM dados_b3_2
 
 WHERE date = '2025-08-05';
 
-👨‍💻 Autor
+# 👨‍💻 Autor
 
 Gabriel Pereira Ferreira.
