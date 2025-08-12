@@ -1,0 +1,401 @@
+{
+	"jobConfig": {
+		"name": "fiap-tech",
+		"description": "",
+		"role": "arn:aws:iam::202403774744:role/RegraGlue",
+		"command": "glueetl",
+		"version": "4.0",
+		"runtime": null,
+		"workerType": "G.1X",
+		"numberOfWorkers": 2,
+		"maxCapacity": 2,
+		"jobRunQueuingEnabled": false,
+		"maxRetries": 0,
+		"timeout": 60,
+		"maxConcurrentRuns": 1,
+		"security": "none",
+		"scriptName": "fiap-tech.py",
+		"scriptLocation": "s3://aws-glue-assets-202403774744-sa-east-1/scripts/",
+		"language": "python-3",
+		"spark": true,
+		"sparkConfiguration": "standard",
+		"jobParameters": [],
+		"tags": [],
+		"jobMode": "VISUAL_MODE",
+		"createdOn": "2025-08-08T18:57:47.802Z",
+		"developerMode": false,
+		"connectionsList": [],
+		"temporaryDirectory": "s3://aws-glue-assets-202403774744-sa-east-1/temporary/",
+		"logging": true,
+		"glueHiveMetastore": true,
+		"etlAutoTuning": true,
+		"metrics": true,
+		"observabilityMetrics": true,
+		"bookmark": "job-bookmark-disable",
+		"sparkPath": "s3://aws-glue-assets-202403774744-sa-east-1/sparkHistoryLogs/",
+		"flexExecution": false,
+		"minFlexWorkers": null,
+		"maintenanceWindow": null,
+		"pythonPath": "",
+		"dependentPath": "",
+		"additionalPythonModules": ""
+	},
+	"dag": {
+		"node-1754679476914": {
+			"nodeId": "node-1754679476914",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [],
+			"name": "AWS Glue Data Catalog",
+			"generatedNodeName": "AWSGlueDataCatalog_node1754679476914",
+			"classification": "DataSource",
+			"type": "Catalog",
+			"isCatalog": true,
+			"database": "default",
+			"table": "scrap",
+			"partitionPredicate": "",
+			"calculatedType": "",
+			"runtimeParameters": [],
+			"codeGenVersion": 2
+		},
+		"node-1754682290412": {
+			"nodeId": "node-1754682290412",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1754679476914"
+			],
+			"name": "Change Schema",
+			"generatedNodeName": "ChangeSchema_node1754682290412",
+			"classification": "Transform",
+			"type": "ApplyMapping",
+			"mapping": [
+				{
+					"toKey": "código",
+					"fromPath": [
+						"código"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "ação",
+					"fromPath": [
+						"ação"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "tipo",
+					"fromPath": [
+						"tipo"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "qtde",
+					"fromPath": [
+						"qtde. teórica"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "part",
+					"fromPath": [
+						"part. (%)"
+					],
+					"toType": "double",
+					"fromType": "double",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "date",
+					"fromPath": [
+						"date"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				}
+			],
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1754682413562": {
+			"nodeId": "node-1754682413562",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1754682290412"
+			],
+			"name": "Aggregate",
+			"generatedNodeName": "Aggregate_node1754682413562",
+			"classification": "Transform",
+			"type": "Aggregate",
+			"parentsValid": true,
+			"calculatedType": "",
+			"groups": [
+				"tipo",
+				"date"
+			],
+			"aggs": [
+				{
+					"column": "código",
+					"aggFunc": "count"
+				},
+				{
+					"column": "código",
+					"aggFunc": "first"
+				},
+				{
+					"column": "ação",
+					"aggFunc": "first"
+				},
+				{
+					"column": "qtde",
+					"aggFunc": "first"
+				},
+				{
+					"column": "part",
+					"aggFunc": "first"
+				}
+			],
+			"codeGenVersion": 2
+		},
+		"node-1754684266110": {
+			"nodeId": "node-1754684266110",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1754683826574"
+			],
+			"name": "Salvar",
+			"generatedNodeName": "Salvar_node1754684266110",
+			"classification": "DataSink",
+			"type": "S3",
+			"streamingBatchInterval": 100,
+			"format": "glueparquet",
+			"compression": "snappy",
+			"numberTargetPartitions": "0",
+			"path": "s3://fiap-pos-tech/refined/",
+			"partitionKeys": [
+				"date",
+				"ação"
+			],
+			"schemaChangePolicy": {
+				"enableUpdateCatalog": true,
+				"updateBehavior": "UPDATE_IN_DATABASE",
+				"database": "default",
+				"table": "dados_b3_2"
+			},
+			"updateCatalogOptions": "schemaAndPartitions",
+			"autoDataQuality": {
+				"isEnabled": true,
+				"evaluationContext": "EvaluateDataQuality_node1754681034725"
+			},
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1754683451750": {
+			"nodeId": "node-1754683451750",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1754682413562"
+			],
+			"name": "Change Schema",
+			"generatedNodeName": "ChangeSchema_node1754683451750",
+			"classification": "Transform",
+			"type": "ApplyMapping",
+			"mapping": [
+				{
+					"toKey": "tipo_acao",
+					"fromPath": [
+						"tipo"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "date",
+					"fromPath": [
+						"date"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "count_código",
+					"fromPath": [
+						"count(código)"
+					],
+					"toType": "long",
+					"fromType": "long",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "código",
+					"fromPath": [
+						"first(código)"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "ação",
+					"fromPath": [
+						"first(ação)"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "qtde. teorica",
+					"fromPath": [
+						"first(qtde)"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "part. (%)",
+					"fromPath": [
+						"first(part)"
+					],
+					"toType": "double",
+					"fromType": "double",
+					"dropped": false,
+					"children": null
+				}
+			],
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1754683826574": {
+			"nodeId": "node-1754683826574",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1754683451750"
+			],
+			"name": "SQL Query",
+			"generatedNodeName": "SQLQuery_node1754683826574",
+			"classification": "Transform",
+			"type": "SqlCode",
+			"sqlAliases": [
+				{
+					"from": "node-1754683451750",
+					"alias": "myDataSource"
+				}
+			],
+			"outputSchemas": [
+				[
+					{
+						"key": "tipo_acao",
+						"fullPath": [
+							"tipo_acao"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "date",
+						"fullPath": [
+							"date"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "count_código",
+						"fullPath": [
+							"count_código"
+						],
+						"type": "bigint",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "código",
+						"fullPath": [
+							"código"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "ação",
+						"fullPath": [
+							"ação"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "qtde. teorica",
+						"fullPath": [
+							"qtde. teorica"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "part. (%)",
+						"fullPath": [
+							"part. (%)"
+						],
+						"type": "double",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "dias_coletado",
+						"fullPath": [
+							"dias_coletado"
+						],
+						"type": "int",
+						"glueStudioType": null,
+						"children": null
+					}
+				]
+			],
+			"parentsValid": true,
+			"calculatedType": "",
+			"sqlQuery": "SELECT *,\n       DATEDIFF(current_date, TO_DATE(date, 'yyyy-MM-dd')) AS dias_coletado\nFROM myDataSource",
+			"codeGenVersion": 2
+		}
+	},
+	"hasBeenSaved": false,
+	"usageProfileName": null
+}
